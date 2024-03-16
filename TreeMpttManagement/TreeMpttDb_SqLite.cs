@@ -463,6 +463,8 @@ namespace gamon.TreeMptt
                 localConnection.Dispose();
             }
         }
+
+        // parte nuova
         internal override void CreateTableTreeMpttDb_SqlServer()
         {
             try
@@ -520,6 +522,26 @@ namespace gamon.TreeMptt
                     ";";
                 var result = cmd.ExecuteScalar();
                 return (result != null);
+            }
+        }
+        internal override void GetTopics(int? numberOfTopics)
+        {
+            List<Topic> TopicsList = new List<Topic>();
+            using (localConnection = dl.Connect())
+            {
+                DbCommand cmd = localConnection.CreateCommand();
+                if (numberOfTopics != null)
+                {
+                    cmd.CommandText = "SELECT" + numberOfTopics + " FROM Topics;";
+                    var result = cmd.ExecuteScalar();
+                }
+                else
+                {
+                    cmd.CommandText = "SELECT * FROM Topics;";
+                    var result = cmd.ExecuteScalar();
+
+                }
+
             }
         }
     }

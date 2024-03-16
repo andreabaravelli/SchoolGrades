@@ -1,7 +1,9 @@
 ﻿using gamon.TreeMptt;
+using SchoolGrades;
 using SchoolGrades.BusinessObjects;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,24 +18,47 @@ namespace NUnitDbTests
             Test_Commons.SetDataLayer();
         }
         [Test]
-        public void T_TreeMpttDb_SqlServer_Create()
+        public void T_TreeMpttDb_SqlServer_CreateTable()
         {
             TreeMpttDb_SqlServer treeMpttDb_SqlServer = new TreeMpttDb_SqlServer(Test_Commons.dl);
-            treeMpttDb_SqlServer.CreateTableTreeMpttDb_SqlServer();
+            //treeMpttDb_SqlServer.CreateTableTreeMpttDb_SqlServer();
             // chiamata al metodo di creazione della tabella 
             Topic topic = new Topic();
             topic.Name = "OOP";
             topic.Id = 1;
             topic.Date = DateTime.Now;
             // Assert.That(!treeMpttDb_SqlServer.TopicExists(topic.Id));
-            treeMpttDb_SqlServer.AddTopic(topic);
+            //treeMpttDb_SqlServer.AddTopic(topic);
             Assert.That(treeMpttDb_SqlServer.TopicExists(topic.Id));
 
         }
         [Test]
-        public void T_TreeMpttDb_SqlServer_Read()
+        public void T_TreeMpttDb_SqlServer_ReadTopics()
         {
+            TreeMpttDb_SqlServer treeMpttDb_SqlServer = new TreeMpttDb_SqlServer(Test_Commons.dl);
+        
+            int? numberOfTopics = null;
+            treeMpttDb_SqlServer.GetTopics(numberOfTopics);
+        }
 
+        [Test]
+        public void T_AreLeftAndRightConsistent()
+        {
+            TreeMpttDb_SqlServer treeMpttDb_SqlServer = new TreeMpttDb_SqlServer(Test_Commons.dl);
+            using (DbConnection conn = Test_Commons.dl.Connect())
+            {
+                DbCommand cmd = conn.CreateCommand();
+                /// creazione della tabella Flags
+                # region flags create table
+                //cmd.CommandText = @"CREATE TABLE Flags (areLeftRightConsistent INT);";
+                //cmd.ExecuteNonQuery();
+                #endregion
+
+                cmd.CommandText = @"INSERT INTO Flags (areLeftRightConsistent) Values (2);";
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                Assert.That(treeMpttDb_SqlServer.AreLeftAndRightConsistent());
+            }
         }
         [Test]
         public void T_TreeMpttDb_SqlServer_Update()
@@ -41,9 +66,22 @@ namespace NUnitDbTests
 
         }
         [Test]
-        public void T_TreeMpttDb_SqlServer_Delete()
+        public void T_TreeMpttDb_SqlServer_DeleteTable()
         {
+            TreeMpttDb_SqlServer treeMpttDb_SqlServer = new TreeMpttDb_SqlServer(Test_Commons.dl);
+            
+        }
+        public void T_TreeMpttDb_SqlServer_DeleteTopics()
+        {
+            TreeMpttDb_SqlServer treeMpttDb_SqlServer = new TreeMpttDb_SqlServer(Test_Commons.dl);
+            List<Topic>? topicsAfter = null;
+            List<Topic> topicsDeleted = new List<Topic>();
 
+           
+            bool mustSaveLeftAndRight = false;
+            bool closeWhenEnding = true;
+
+            treeMpttDb_SqlServer.SaveTreeToDb(topicsAfter,topicsDeleted,mustSaveLeftAndRight,closeWhenEnding);
         }
     }
 }

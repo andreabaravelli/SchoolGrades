@@ -12,11 +12,11 @@ namespace gamon.TreeMptt
     {
         DataLayer dl;
         private DbConnection localConnection;
-
+        
         // !!!! TODO; turn to generic this tree, such that it can contain any class and not just Topic instances !!!!
         internal TreeMpttDb_SqlServer(DataLayer dataLayer) : base(dataLayer)
         {
-            ////////////dl = dl;
+            dl=dataLayer;
         }
         internal override void SaveTreeToDb(List<Topic> ListTopicsAfter, List<Topic> ListTopicsDeleted,
             bool MustSaveLeftAndRight, bool CloseWhenEnding)
@@ -464,6 +464,9 @@ namespace gamon.TreeMptt
                 localConnection.Dispose();
             }
         }
+
+
+        // parte nuova
         internal override void CreateTableTreeMpttDb_SqlServer()
         {
             try
@@ -481,7 +484,7 @@ namespace gamon.TreeMptt
 	                parentNode	INT,
 	                childNumber	INT,
 	                PRIMARY KEY(idTopic)
-                );";// creazione della query.
+                     );";// creazione della query.
 
                     cmd.ExecuteNonQuery();// esecuzione della query
                 }
@@ -521,6 +524,25 @@ namespace gamon.TreeMptt
                     ";";
                 var result = cmd.ExecuteScalar();
                 return (result != null);
+            }
+        }
+        internal override void GetTopics(int? numberOfTopics)
+        {
+            List<Topic> TopicsList = new List<Topic>(); 
+            using (localConnection = dl.Connect()) {
+                DbCommand cmd = localConnection.CreateCommand();
+                if (numberOfTopics != null)
+                {
+                    cmd.CommandText = @"SELECT" + numberOfTopics + " FROM Topics;";
+                    var result = cmd.ExecuteScalar();
+                }
+                else
+                {
+                    cmd.CommandText = @"SELECT * FROM Topics;";
+                    var result = cmd.ExecuteScalar();
+                    
+                }
+                
             }
         }
     }
