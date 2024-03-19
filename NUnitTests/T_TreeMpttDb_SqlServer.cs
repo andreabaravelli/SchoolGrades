@@ -50,17 +50,25 @@ namespace NUnitDbTests
                 DbCommand cmd = conn.CreateCommand();
                 /// creazione della tabella Flags
                 # region flags create table
-                //cmd.CommandText = @"CREATE TABLE Flags (areLeftRightConsistent INT);";
-                //cmd.ExecuteNonQuery();
+              cmd.CommandText = @"CREATE TABLE Flags (areLeftRightConsistent bit);";
+               cmd.ExecuteNonQuery();
                 #endregion
 
-                cmd.CommandText = @"INSERT INTO Flags (areLeftRightConsistent) Values (2);";
+                cmd.CommandText = @"INSERT INTO Flags (areLeftRightConsistent) Values (1);";
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
                 Assert.That(treeMpttDb_SqlServer.AreLeftAndRightConsistent());
             }
         }
         [Test]
+        public void T_SaveLeftRightConsistent()
+        {
+            TreeMpttDb_SqlServer treeMpttDb_SqlServer = new TreeMpttDb_SqlServer(Test_Commons.dl);
+            treeMpttDb_SqlServer.SaveLeftRightConsistent(true);
+
+        }
+        [Test]
+       
         public void T_TreeMpttDb_SqlServer_Update()
         {
 
@@ -71,6 +79,7 @@ namespace NUnitDbTests
             TreeMpttDb_SqlServer treeMpttDb_SqlServer = new TreeMpttDb_SqlServer(Test_Commons.dl);
             
         }
+        [Test]
         public void T_TreeMpttDb_SqlServer_DeleteTopics()
         {
             TreeMpttDb_SqlServer treeMpttDb_SqlServer = new TreeMpttDb_SqlServer(Test_Commons.dl);

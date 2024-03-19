@@ -25,7 +25,7 @@ namespace gamon.TreeMptt
             // if localConnection is null, the connection must be opened and closed locally 
             if (localConnection == null)
             {
-                ////////////localConnection = dl.Connect();
+                localConnection = dl.Connect();
             }
             DbCommand cmd = localConnection.CreateCommand();
             SaveLeftRightConsistent(false);
@@ -112,9 +112,9 @@ namespace gamon.TreeMptt
                     cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT areLeftRightConsistent" +
                         " FROM Flags";
-                    int consistent = (int)cmd.ExecuteScalar();
+                    bool consistent = (bool)cmd.ExecuteScalar();
                     cmd.Dispose();
-                    return consistent != 0;
+                    return consistent != false;
                 }
                 catch (Exception e)
                 {
