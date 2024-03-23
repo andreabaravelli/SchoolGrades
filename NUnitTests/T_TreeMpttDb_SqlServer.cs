@@ -21,14 +21,14 @@ namespace NUnitDbTests
         public void T_TreeMpttDb_SqlServer_CreateTable()
         {
             TreeMpttDb_SqlServer treeMpttDb_SqlServer = new TreeMpttDb_SqlServer(Test_Commons.dl);
-            //treeMpttDb_SqlServer.CreateTableTreeMpttDb_SqlServer();
+            treeMpttDb_SqlServer.CreateTableTreeMpttDb_SqlServer();
             // chiamata al metodo di creazione della tabella 
             Topic topic = new Topic();
             topic.Name = "OOP";
             topic.Id = 1;
             topic.Date = DateTime.Now;
-            // Assert.That(!treeMpttDb_SqlServer.TopicExists(topic.Id));
-            //treeMpttDb_SqlServer.AddTopic(topic);
+             Assert.That(!treeMpttDb_SqlServer.TopicExists(topic.Id));
+            treeMpttDb_SqlServer.AddTopic(topic);
             Assert.That(treeMpttDb_SqlServer.TopicExists(topic.Id));
 
         }
@@ -51,7 +51,7 @@ namespace NUnitDbTests
                 /// creazione della tabella Flags
                 # region flags create table
               cmd.CommandText = @"CREATE TABLE Flags (areLeftRightConsistent bit);";
-               cmd.ExecuteNonQuery();
+              cmd.ExecuteNonQuery();
                 #endregion
 
                 cmd.CommandText = @"INSERT INTO Flags (areLeftRightConsistent) Values (1);";
@@ -91,6 +91,17 @@ namespace NUnitDbTests
             bool closeWhenEnding = true;
 
             treeMpttDb_SqlServer.SaveTreeToDb(topicsAfter,topicsDeleted,mustSaveLeftAndRight,closeWhenEnding);
+        }
+        [Test]
+        public void T_TreeMpttDb_SqlServer_GetNodesByParent()
+        {
+            TreeMpttDb_SqlServer treeMpttDb_SqlServer = new TreeMpttDb_SqlServer(Test_Commons.dl);
+            Topic topic = new Topic();
+            topic.Name = "polimorfismo";
+            topic.Id = 2;
+            topic.Date = DateTime.Now;
+            treeMpttDb_SqlServer.AddTopic(topic);
+            Assert.Equals(2,treeMpttDb_SqlServer.GetNodesByParent().Count);
         }
     }
 }
